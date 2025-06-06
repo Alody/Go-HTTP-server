@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 	"github.com/Alody/Go-HTTP-server/internal/auth"
+	"github.com/Alody/Go-HTTP-server/internal/database"
 
 	"github.com/google/uuid"
 )
@@ -33,7 +34,16 @@ func (cfg *apiConfig) handlerUsersCreate(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	user, err := cfg.db.CreateUser(r.Context(), params.Email, HashPassword(params.Password))
+	hashedPassword, err := auth.HashPassword(params.Password)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't hash password", err)
+		return
+	}
+
+	user, err := cfg.db.CreateUser(r.Context(), database.CreateUserParams{
+		Email:        params.Email,
+		PasswordHash: hashedPassword,
+	})
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Couldn't create user", err)
 		return

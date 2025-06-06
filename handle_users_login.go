@@ -2,17 +2,9 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 	"github.com/Alody/Go-HTTP-server/internal/auth"
-	"github.com/google/uuid"
 )
-// User represents a user in the system.
-type User struct {
-	ID        uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Email     string    `json:"email"`
-}
+
 // handlerUsersLogin handles user login requests.
 func (cfg *apiConfig) handlerUsersLogin(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
@@ -31,7 +23,7 @@ func (cfg *apiConfig) handlerUsersLogin(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	user, err := cfg.db.GetUserByEmail(r.Context(), params.Email)
+	user, err := cfg.db.GetUserByEmail(r.Context(), params.Email, )
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Incorrect email or password", err)
 		return
