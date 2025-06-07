@@ -1,7 +1,9 @@
 package main
+
 import (
 	"encoding/json"
 	"net/http"
+
 	"github.com/Alody/Go-HTTP-server/internal/auth"
 )
 
@@ -12,7 +14,7 @@ func (cfg *apiConfig) handlerUsersLogin(w http.ResponseWriter, r *http.Request) 
 		Password string `json:"password"`
 	}
 	type response struct {
-		User User `json:"user"`
+		User
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -23,7 +25,7 @@ func (cfg *apiConfig) handlerUsersLogin(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	user, err := cfg.db.GetUserByEmail(r.Context(), params.Email, )
+	user, err := cfg.db.GetUserByEmail(r.Context(), params.Email)
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Incorrect email or password", err)
 		return

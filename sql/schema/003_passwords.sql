@@ -1,4 +1,4 @@
 -- +goose Up
 ALTER TABLE users
-    ADD COLUMN password_hash TEXT NOT NULL DEFAULT 'unset';
+    ADD COLUMN password_hash TEXT NOT NULL;
 -- +goose Down
