@@ -16,13 +16,20 @@ type apiConfig struct {
 	fileserverHits atomic.Int32
 	db             *database.Queries
 	platform       string
+	JWT_key        string
 }
 
 func main() {
 	const filepathRoot = "."
 	const port = "8080"
 
+	// Load environment variables from .env file
+
 	godotenv.Load()
+	JWT_key := os.Getenv("JWT_SECRET")
+	if JWT_key == "" {
+		log.Fatal("JWT_SECRET must be set")
+	}
 	dbURL := os.Getenv("DB_URL")
 	if dbURL == "" {
 		log.Fatal("DB_URL must be set")
