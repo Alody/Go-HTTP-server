@@ -9,6 +9,8 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"crypto/rand"
+	"encoding/hex"
 )
 
 // HashPassword takes a plain text password as input and returns a securely hashed version of it.
@@ -57,6 +59,7 @@ func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
 }
 
 func GetBearerToken(headers http.Header) (string, error) {
+
 	authHeader := headers.Get("Authorization")
 	if len(authHeader) == 0 {
 		return "", jwt.NewValidationError("missing Authorization header", jwt.ValidationErrorMalformed)
@@ -72,4 +75,15 @@ func GetBearerToken(headers http.Header) (string, error) {
 	}
 
 	return token, nil
+}
+
+func MakeRefreshToken() (string, error) {
+	
+	token := make([]byte, 32) // 256-bit token
+	_, err := rand.Read(token)
+	if err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(token), nil
+
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
+	"log"
 
 	"github.com/Alody/Go-HTTP-server/internal/auth"
 	"github.com/Alody/Go-HTTP-server/internal/database"
@@ -47,6 +48,7 @@ func (cfg *apiConfig) handlerUsersCreate(w http.ResponseWriter, r *http.Request)
 		PasswordHash: hashedPassword,
 	})
 	if err != nil {
+		log.Printf("CreateUser DB error: %v", err) 
 		respondWithError(w, http.StatusInternalServerError, "Couldn't create user", err)
 		return
 	}
